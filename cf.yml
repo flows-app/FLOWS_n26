@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "meshify n26"
+Resources:
+  MESHIFYn26newtransactionFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: MESHIFY_n26_newtransaction
+      Handler: index.handler
+      Role:
+        Fn::GetAtt: [ LambdaRole , Arn ]
+      Runtime: nodejs6.10
+      Timeout: 300
+  MESHIFYn26getbalanceFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: MESHIFY_n26_getbalance
+      Handler: index.handler
+      Role:
+        Fn::GetAtt: [ LambdaRole , Arn ]
+      Runtime: nodejs6.10
+      Timeout: 300
+  MESHIFYn26newtransactionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+          - ""
+          - - "/aws/lambda/"
+            - Ref: MESHIFYn26newtransactionFunction
+      RetentionInDays: 7
+  MESHIFYn26getbalanceLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+          - ""
+          - - "/aws/lambda/"
+            - Ref: MESHIFYn26getbalanceFunction
+      RetentionInDays: 7
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+  InvokeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            AWS:
+            - 321232316075
+            - 184705290838
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - lambda:InvokeFunction
+              Resource:
+              - Fn::GetAtt: [ MESHIFYn26newtransactionFunction , Arn ]
+              - Fn::GetAtt: [ MESHIFYn26getbalanceFunction , Arn ]
+Outputs:
+  MESHIFYn26newtransactionFunction:
+    Description: '/MESHIFY/MESHIFY/n26/newtransaction/lambda'
+    Value:
+      Fn::GetAtt: [ MESHIFYn26newtransactionFunction , Arn ]
+  MESHIFYn26newtransactionRole:
+    Description: '/MESHIFY/MESHIFY/n26/newtransaction/role'
+    Value:
+      Fn::GetAtt: [ InvokeRole , Arn ]
+  MESHIFYn26getbalanceFunction:
+    Description: '/MESHIFY/MESHIFY/n26/getbalance/lambda'
+    Value:
+      Fn::GetAtt: [ MESHIFYn26getbalanceFunction , Arn ]
+  MESHIFYn26getbalanceRole:
+    Description: '/MESHIFY/MESHIFY/n26/getbalance/role'
+    Value:
+      Fn::GetAtt: [ InvokeRole , Arn ]
