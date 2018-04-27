@@ -2,10 +2,18 @@ const N26 = require("n26");
 const AWS = require("aws-sdk");
 
 exports.handler = (event, context,callback) => {
+  //remove credentials from event structure
   let username = event.user.username;
   let password = event.user.password;
+  event.user.username='***';
+  event.user.password='***';
+
+  console.log("event");
+  console.log(JSON.stringify(event,null,2));
+
+  let threeDaysAgo = new Date().getTime()-(3*86400000);
   new N26(username, password)
-    .then(account => account.transactions())
+    .then(account => account.transactions({"from":threeDaysAgo}))
     .then(transactions => {
       console.log(JSON.stringify(transactions,null,2));
       callback(null, transactions);
