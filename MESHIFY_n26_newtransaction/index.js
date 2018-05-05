@@ -16,6 +16,10 @@ exports.handler = (event, context,callback) => {
     .then(account => account.transactions({"from":threeDaysAgo}))
     .then(transactions => {
       console.log(JSON.stringify(transactions,null,2));
+      //assign dedupid explicitly
+      for(let idx=0;idx<transactions.length;idx++){
+        transactions[idx]['dedupid']=transactions[idx]['id']
+      }
       callback(null, transactions);
 
     /*
