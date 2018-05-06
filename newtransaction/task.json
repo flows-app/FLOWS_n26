@@ -1,0 +1,51 @@
+{
+    "id": "FLOWS/n26/newtransaction",
+    "lambda": "lambda-arn",
+    "role": "iam-arn",
+    "input": {
+        "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "description": "user credentials",
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["username","password"]
+                }
+            },
+            "required": ["user"]
+        },
+        "examples": {
+            "json1": {
+              "user":{
+                "username":"user1",
+                "password":"password1"
+              }
+            }
+        }
+    },
+    "output": {
+        "schema": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "description": "parsed object",
+            "type": "object"
+        },
+        "examples": {
+            "result": {
+                "name": "value"
+            }
+        }
+    },
+    "type": "poller",
+    "description": "triggers whenever a new transaction appear within the account",
+    "icon": "https://flows.app/favicon.png",
+    "billing": "standard"
+}
