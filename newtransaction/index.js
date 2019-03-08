@@ -8,19 +8,29 @@ exports.handler = (event, context,callback) => {
   event.user.username='***';
   event.user.password='***';
 
-  console.log("event");
-  console.log(JSON.stringify(event,null,2));
-
   let threeDaysAgo = new Date().getTime()-(3*86400000);
   new N26(username, password)
     .then(account => account.transactions({"from":threeDaysAgo}))
     .then(transactions => {
-      console.log(JSON.stringify(transactions,null,2));
       //assign dedupid explicitly
       for(let idx=0;idx<transactions.length;idx++){
-        transactions[idx]['dedupid']=transactions[idx]['id']
+        transactions[idx]['dedupid']=transactions[idx]['createdTS']
       }
-      callback(null, transactions);
+
+      //sort result by date desc
+      transactions = transactions.sort(function(a,b){
+        return new Date(b.createdTS) - new Date(a.createdTS);
+      })
+      //look for lastvalue entry
+      let lastvalue = context.clientContext.custom.lastvalue;
+      let finalresult = [];
+      for(let idx=0;idx<transactions.length;idx++){
+        if(transactions[idx].dedupid > lastvalue){
+          finalresult.push(transactions[idx]);
+        }
+      }
+      //return result by date ascending
+      callback(null,finalresult.reverse());
 
     /*
       [{

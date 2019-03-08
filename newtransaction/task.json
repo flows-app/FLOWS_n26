@@ -3,26 +3,6 @@
     "lambda": "lambda-arn",
     "role": "iam-arn",
     "input": {
-        "schema": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "description": "user credentials",
-            "type": "object",
-            "properties": {
-                "user": {
-                    "type": "object",
-                    "properties": {
-                      "username": {
-                        "type": "string"
-                      },
-                      "password": {
-                        "type": "string"
-                      }
-                    },
-                    "required": ["username","password"]
-                }
-            },
-            "required": ["user"]
-        },
         "examples": {
             "json1": {
               "user":{
@@ -33,15 +13,36 @@
         }
     },
     "output": {
-        "schema": {
-            "$schema": "http://json-schema.org/draft-07/schema#",
-            "description": "parsed object",
-            "type": "object"
-        },
         "examples": {
-            "result": {
-                "name": "value"
-            }
+          "result": {
+            "id": "ec38a249-991a-4487-b7c8-a66f9bac87cd",
+            "userId": "09b5478f-a182-421f-b585-57dc5247ba68",
+            "type": "AA",
+            "amount": -10,
+            "currencyCode": "EUR",
+            "originalAmount": -10,
+            "originalCurrency": "EUR",
+            "exchangeRate": 1,
+            "merchantCity": "HAMBURG",
+            "visibleTS": 1551807253000,
+            "mcc": 5814,
+            "mccGroup": 2,
+            "merchantName": "JIM BLOCK 554 DAMMTOR",
+            "recurring": false,
+            "partnerAccountIsSepa": false,
+            "accountId": "6c70fe01-3470-41c7-8f89-cd98968a1786",
+            "category": "micro-v2-bars-restaurants",
+            "cardId": "8a4af3c5-1eee-40f3-89ef-324fdcd4ae92",
+            "userCertified": 1551807253785,
+            "pending": false,
+            "transactionNature": "NORMAL",
+            "transactionTerminal": "ATM",
+            "createdTS": 1551807253785,
+            "merchantCountry": 0,
+            "smartLinkId": "ec38a249-990a-4487-b7c8-a66f9bac87cd",
+            "linkId": "ec38a249-990a-4487-b7c8-a66f9bac87cd",
+            "confirmed": 1551807253785
+          }
         }
     },
     "type": "poller",
